@@ -1,0 +1,103 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+body{
+    font-family: 'Roboto', sans-serif;
+    background-color: #1a191f;
+    color: white;
+}
+
+a{ 
+    color: white;
+}
+
+.header-content{
+    display: flex;
+    justify-content: space-between;
+    margin: 30px 0;
+}
+
+.search{
+    background-color: white;
+    max-width: 150px;
+    border-radius: 3px;
+    padding: 5px;
+    color: #1a191f;
+}
+
+.container{
+    max-width: 1230px;
+    padding: 0 15px;
+    margin: 0 auto;
+}
+
+.header-logo {
+    font-size: 26px;
+}
+.movies {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 33px;
+    row-gap: 33px;
+    justify-content: space-between;
+}
+.movies-item {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    row-gap: 5px;
+    max-width: 275px;
+}
+.movies-item-cover-inner {
+    position: relative;
+}
+
+.movies-item-darkend {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: black;
+    opacity: 0.1;
+    height: 100%;
+    width: 100%;
+    z-index: 2;
+}
+
+.movies-item-darkend:hover {
+    cursor: pointer;
+    background-color: aliceblue;
+}
+
+.movies-item-title {
+    font-size: 16px;
+}
+.movies-item-category {
+    font-size: 14px;
+    color: rgb(241, 241, 25);
+    display: flex;
+}
+
+.movies-item-average {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: #1a191f;
+    height: 36px;
+    width: 36px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+}
+
+.movies-item-average--green {
+    border: 1px solid green;
+}
+
+.movies-item-average--orange {
+    border: 1px solid orange;
+}
+
+.movies-item-average--red {
+    border: 1px solid red;
+}
