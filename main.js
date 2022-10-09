@@ -1,6 +1,7 @@
 const API_KEY = '8c8e1a50-6322-4135-8875-5d40a5420d86'
 const API_URL_POPULAR = 'https://kinopoiskapiunofficial.tech/api/v2.2/films/top?type=TOP_100_POPULAR_FILMS&page=1'
 const API_URL_SEARCH = 'https://kinopoiskapiunofficial.tech/api/v2.1/films/search-by-keyword?keyword='
+const API_URL_ID = 'https://kinopoiskapiunofficial.tech/api/v2.2/films/'
 
 async function getMovies(url) {
     const resp = await fetch(url, {
@@ -10,7 +11,6 @@ async function getMovies(url) {
         }
     })
     const respData = await resp.json()
-    console.log(respData)
     showMovies(respData)
 }
 
@@ -23,7 +23,6 @@ function showMovies(data) {
 
     data.films.forEach((movie) => {
         const movieItemEL = document.createElement('div')
-        console.log(movieItemEL)
         movieItemEL.classList.add('movies-item')
         movieItemEL.innerHTML = `
         <div class="movies-item">
@@ -38,7 +37,7 @@ function showMovies(data) {
         </div>
     </div>
     `
-    console.log(movie.genres[1])
+    movieItemEL.addEventListener('click', () => openModal(movie.filmId))
     moviesEl.appendChild(movieItemEL)
     })
 }
@@ -63,9 +62,6 @@ function getMovieName(nameEn, nameRu) {
 
 const form = document.querySelector('form')
 const search = document.querySelector('.search')
-console.log(form)
-console.log(search)
-
 form.addEventListener('submit', (e) => {
     e.preventDefault()
 
@@ -76,4 +72,60 @@ form.addEventListener('submit', (e) => {
     }
 
     search.value = ''
+})
+
+// Modal
+
+const modalEl = document.querySelector('.modal')
+
+async function openModal(id) {
+    const resp = await fetch(API_URL_ID + id, {
+        headers: {
+            'Content-Type': 'application/json',
+            'X-API-KEY': API_KEY
+        }
+    })
+    const respData = await resp.json()
+
+    console.log(id)
+    console.log(respData)
+    modalEl.classList.add('modal-show')
+    document.body.classList.add('stop-scrolling')
+
+    modalEl.innerHTML = ` 
+    <div class="modal-card">
+        <img src="${respData.posterUrl}" alt="${getMovieName(respData.nameOriginal, respData.nameRu)}" class="modal-cover">
+        <h2>
+            <span class="title">${getMovieName(respData.nameOriginal, respData.nameRu)}</span>
+            <span class="">${respData.endYear}</span>
+        </h2>
+        <ul class="modal-info">
+            <div class="loader"></div>
+            <li class="modal-genre">${respData.genres.map((genre) => ` ${genre.genre}`)}</li>
+            ${respData.filmLength ? `<li class="modal-time">Duration: ${respData.filmLength} min</li>` : ''}
+            <li>Сайт: <a href="${respData.webUrl}" class="modal-site">${respData.webUrl}</a></li>
+            <li class="modal-overview">${respData.description}</li>
+        </ul>
+        <button type="button" class="modal-btn-close">Close</button>
+    </div>
+    `
+    const closeBtn = document.querySelector('.modal-btn-close')
+    closeBtn.addEventListener('click', closeModal)
+} 
+
+function closeModal() {
+    modalEl.classList.remove('modal-show')
+    document.body.classList.remove('stop-scrolling')
+}
+
+window.addEventListener('click', (e) => {
+    if (e.target === modalEl) {
+        closeModal()
+    }
+})
+
+window.addEventListener('keydown', (e) => {
+    if (e.keyCode === 27) {
+        closeModal()
+    }
 })
